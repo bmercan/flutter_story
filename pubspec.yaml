@@ -7,18 +7,20 @@ email: ihamedshirvani@gmail.com
 version: 1.0.1
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
+  sdk: ">=3.2.0 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
+
+  gradient_borders: ^1.0.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
 screenshots:
-  - description: 'Example of the sliding box on Android.'
+  - description: "Example of the sliding box on Android."
     path: flutter_story_demo.webp
 
 flutter:

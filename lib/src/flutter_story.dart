@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 
 class Story extends StatefulWidget {
   const Story({
@@ -219,7 +220,8 @@ class _StoryState extends State<Story> {
                   margin: s.margin,
                   avatarColor: s.avatarColor,
                   borderWidth: s.borderWidth,
-                  borderColor: s.borderColor,
+                  borderGradient: s.borderGradient,
+                  visitedBorderGradient: s.visitedBorderGradient,
                   borderPadding: s.borderPadding,
                   borderRadius: s.borderRadius,
                   avatar: s.avatar,
@@ -509,8 +511,10 @@ class StoryUser extends StatefulWidget {
     this.margin = const EdgeInsets.symmetric(vertical: 5, horizontal: 7),
     this.avatarColor = Colors.grey,
     this.borderWidth = 3,
-    this.visitedBorderColor = const Color(0xFFDDDDDD),
-    this.borderColor = Colors.deepOrange,
+    this.borderGradient =
+        const LinearGradient(colors: [Colors.deepOrange, Colors.deepOrange]),
+    this.visitedBorderGradient =
+        const LinearGradient(colors: [Colors.deepOrange, Colors.deepOrange]),
     this.borderPadding = const EdgeInsets.all(4),
     this.borderRadius = const BorderRadius.all(Radius.circular(43)),
     this.avatar,
@@ -539,11 +543,11 @@ class StoryUser extends StatefulWidget {
   final double borderWidth;
 
   /// Determines the color of the [StoryUser] border.
-  final Color borderColor;
+  final Gradient borderGradient;
 
   /// Determines the color of the [StoryCard] border,
   /// when all [StoryUser] child visited.
-  final Color visitedBorderColor;
+  final Gradient visitedBorderGradient;
 
   /// The padding of the [StoryUser.avatar] border.
   final EdgeInsets borderPadding;
@@ -596,12 +600,29 @@ class _StoryUserState extends State<StoryUser> {
                 decoration: BoxDecoration(
                   border: widget.children.isEmpty
                       ? null
-                      : Border.all(
+                      : GradientBoxBorder(
+                          width: widget.borderWidth,
+                          gradient: widget.children.any((e) => !e.visited)
+                              ? widget.borderGradient
+                              : widget
+                                  .visitedBorderGradient /*  LinearGradient(
+                            colors: widget.children.any((e) => !e.visited)
+                                ? [
+                                    widget.visitedBorderColor,
+                                    widget.visitedBorderColor
+                                  ]
+                                : [
+                                    widget.borderColor,
+                                    widget.visitedBorderColor
+                                  ],
+                          ), */
+                          ),
+                  /* Border.all(
                           width: widget.borderWidth,
                           color: widget.children.any((e) => !e.visited)
                               ? widget.borderColor
                               : widget.visitedBorderColor,
-                        ),
+                        ), */
                   borderRadius: widget.borderRadius,
                 ),
                 child: Container(
