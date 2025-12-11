@@ -1009,6 +1009,13 @@ class StoryController extends ValueNotifier<dynamic> {
         "StoryController must be used within a Story view");
     return _storyboardState!._nextStory();
   }
+
+  /// Moves to the previous story or previous card if not at the first card.
+  void previousStory() {
+    assert(_storyboardState != null,
+        "StoryController must be used within a Story view");
+    return _storyboardState!._previousStory();
+  }
 }
 
 /// /////////////////////////////////////////////// ///
