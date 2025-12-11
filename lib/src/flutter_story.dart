@@ -915,11 +915,16 @@ class StoryCardLike {
 /// It can be used to control the state of [Story].
 class StoryController extends ValueNotifier<dynamic> {
   _StoryState? _storyState;
+  _StoryboardState? _storyboardState;
 
   StoryController() : super(dynamic);
 
   void _addState(_StoryState storyState) {
     _storyState = storyState;
+  }
+
+  void _addStoryboardState(_StoryboardState? storyboardState) {
+    _storyboardState = storyboardState;
   }
 
   /// Determine if the [Story.controller] is attached to an instance of the
@@ -996,6 +1001,13 @@ class StoryController extends ValueNotifier<dynamic> {
   bool get isAutoplay {
     assert(isAttached, "StoryController must be attached to a Story");
     return _storyState!._autoplay;
+  }
+
+  /// Moves to the next story or next card if not at the last card.
+  void nextStory() {
+    assert(_storyboardState != null,
+        "StoryController must be used within a Story view");
+    return _storyboardState!._nextStory();
   }
 }
 
@@ -1175,6 +1187,7 @@ class _StoryboardState extends State<_Storyboard>
   void initState() {
     super.initState();
     _cardController._addState(this);
+    widget.storyController?._addStoryboardState(this);
     _autoplay = widget.autoplay;
     _storyIndex = widget.storyIndex;
     _setUnvisitedToAllVisitedStories();
@@ -1239,6 +1252,7 @@ class _StoryboardState extends State<_Storyboard>
 
   @override
   void dispose() {
+    widget.storyController?._addStoryboardState(null);
     _pageController?.dispose();
     _progressController?.stop();
     _progressController?.dispose();
