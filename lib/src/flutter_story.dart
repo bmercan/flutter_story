@@ -2019,7 +2019,7 @@ class _CardListState extends State<_CardList>
           ),
         ),
         Container(
-          margin: const EdgeInsets.only(top: 22, left: 12),
+          margin: const EdgeInsets.only(top: 22, left: 12, right: 12),
           child: Row(
             children: [
               if (widget.avatar != null)
@@ -2034,6 +2034,19 @@ class _CardListState extends State<_CardList>
                 ),
               if (widget.label != null)
                 Container(child: widget.label!._toCardLabel),
+              const Spacer(),
+              IconButton(
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                icon: const Icon(
+                  CupertinoIcons.xmark,
+                  color: Colors.white,
+                  size: 24,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
             ],
           ),
         ),
