@@ -264,6 +264,7 @@ class _StoryState extends State<Story> {
                     s.onPressed?.call(index);
                   },
                   onLongPressed: (_) => s.onLongPressed?.call(index),
+                  onUserCardTap: s.onUserCardTap,
                   children: s.children,
                 );
               });
@@ -522,6 +523,7 @@ class StoryUser extends StatefulWidget {
     this.children = const [],
     this.onPressed,
     this.onLongPressed,
+    this.onUserCardTap,
   });
 
   /// The [userId] of the [StoryUser].
@@ -574,6 +576,10 @@ class StoryUser extends StatefulWidget {
   /// This callback is called when long pressed on the [StoryUser.avatar].
   /// Returns a index of the [StoryUser] list.
   final ValueChanged<int>? onLongPressed;
+
+  /// This callback is called when tapped on the user card header (avatar and name).
+  /// Returns a index of the [StoryUser] list.
+  final ValueChanged<int>? onUserCardTap;
 
   @override
   State<StoryUser> createState() => _StoryUserState();
@@ -1453,6 +1459,7 @@ class _StoryboardState extends State<_Storyboard>
         progressController: _progressController!,
         storyIndex: i,
         cardIndex: _getLastVisitedCardIndex(storyIndex: i),
+        onUserCardTap: widget.children[i].onUserCardTap,
       ));
     }
     cardList.add(Container());
@@ -1523,6 +1530,7 @@ class _CardList extends StatefulWidget {
     required this.progressController,
     required this.storyIndex,
     required this.cardIndex,
+    this.onUserCardTap,
   });
 
   /// It can be used to control the state of [StoryCard].
@@ -1546,6 +1554,10 @@ class _CardList extends StatefulWidget {
 
   /// The [cardIndex] of the [StoryCard] list.
   final int cardIndex;
+
+  /// This callback is called when tapped on the user card header (avatar and name).
+  /// Returns a index of the [StoryUser] list.
+  final ValueChanged<int>? onUserCardTap;
 
   @override
   State<_CardList> createState() => _CardListState();
@@ -2022,18 +2034,29 @@ class _CardListState extends State<_CardList>
           margin: const EdgeInsets.only(top: 22, left: 12, right: 12),
           child: Row(
             children: [
-              if (widget.avatar != null)
-                Container(
-                  width: 36,
-                  height: 36,
-                  margin: const EdgeInsets.only(right: 10),
-                  clipBehavior: Clip.antiAlias,
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(18))),
-                  child: widget.avatar,
+              GestureDetector(
+                onTap: widget.onUserCardTap != null
+                    ? () => widget.onUserCardTap?.call(widget.storyIndex)
+                    : null,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (widget.avatar != null)
+                      Container(
+                        width: 36,
+                        height: 36,
+                        margin: const EdgeInsets.only(right: 10),
+                        clipBehavior: Clip.antiAlias,
+                        decoration: const BoxDecoration(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(18))),
+                        child: widget.avatar,
+                      ),
+                    if (widget.label != null)
+                      Container(child: widget.label!._toCardLabel),
+                  ],
                 ),
-              if (widget.label != null)
-                Container(child: widget.label!._toCardLabel),
+              ),
               const Spacer(),
               IconButton(
                 padding: EdgeInsets.zero,
